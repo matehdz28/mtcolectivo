@@ -1,0 +1,79 @@
+/* =========================================
+   🎨 VARIABLES DE DISEÑO — MTC Colectivo
+   ========================================= */
+
+/* === Colores base === */
+$color-brand-50:  #E8F5E9;
+$color-brand-100: #C8E6C9;
+$color-brand-200: #A5D6A7;
+$color-brand-300: #81C784;
+$color-brand-400: #66BB6A;
+$color-brand-500: #4CAF50; // color principal MTC
+$color-brand-600: #388E3C;
+$color-brand-700: #2E7D32;
+$color-brand-800: #1B5E20;
+
+$color-accent:    #81C784;
+$color-text:      #0F172A;
+$color-muted:     #64748B;
+$color-label:     #334155;
+
+$color-bg:        #F6F8FC;
+$color-card:      #FFFFFF;
+$color-surface:   $color-card; // alias para mixins
+$color-border:    #E5E7EB;
+
+/* === Sombras === */
+$shadow-sm: 0 0.25rem 0.75rem rgba(16, 24, 40, 0.06);
+$shadow-md: 0 0.5rem 1rem rgba(16, 24, 40, 0.08);
+$shadow-lg: 0 1.875rem 3.75rem rgba(16, 24, 40, 0.08);
+
+/* === Radios === */
+$radius-card: 1rem;     // 16px
+$radius-input: 0.625rem; // 10px
+
+/* === Espaciados === */
+$space-2: 0.5rem;
+$space-4: 1rem;
+$space-6: 1.5rem;
+$space-8: 2rem;
+$space-10: 2.5rem;
+
+/* === Tipografía === */
+$font-size-base: 1rem;
+$font-size-sm: 0.875rem;
+$font-size-lg: 1.125rem;
+$font-weight-bold: 700;
+
+/* === Breakpoints === */
+$bp-sm: 36rem; // ~576px
+$bp-md: 48rem; // ~768px
+$bp-lg: 64rem; // ~1024px
+$bp-xl: 80rem; // ~1280px
+
+/* Sombras */
+$shadow-sm: 0 .125rem .375rem rgba(16,24,40,.08);
+$shadow-md: 0 .5rem 1rem rgba(16,24,40,.10);
+$shadow-lg: 0 1.25rem 2.5rem rgba(16,24,40,.10), 0 .25rem .75rem rgba(16,24,40,.06);
+/* NUEVO: */
+$shadow-xl: 0 2rem 3.5rem rgba(16,24,40,.12), 0 .5rem 1.25rem rgba(16,24,40,.08);
+
+/* ===== Success (Green) ===== */
+$color-success-50:  #ecfdf5;
+$color-success-100: #d1fae5;
+$color-success-200: #a7f3d0;
+$color-success-300: #6ee7b7;
+$color-success-400: #34d399;
+$color-success-500: #10b981; // usado en Modal.scss
+$color-success-600: #059669;
+$color-success-700: #047857;
+
+/* ===== Error (Red) ===== */
+$color-error-50:  #fef2f2;
+$color-error-100: #fee2e2;
+$color-error-200: #fecaca;
+$color-error-300: #fca5a5;
+$color-error-400: #f87171;
+$color-error-500: #ef4444; // usado en Modal.scss
+$color-error-600: #dc2626;
+$color-error-700: #b91c1c;

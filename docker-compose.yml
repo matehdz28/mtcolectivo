@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: mt-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:////data/app.db
+      - JWT_SECRET=RadioHeadInRainbows
+      - JWT_EXPIRES_MIN=120
+      - ADMIN_USER=admin
+      - ADMIN_PASS=mtcolectivo2025
+    volumes:
+      - ./backend:/app                        # tu código
+      - backend_data:/data                    # volumen de datos
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    networks:
+      - mt-network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: mt-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - mt-network
+
+volumes:
+  backend_data:                               # volumen persistente
+
+networks:
+  mt-network:
+    driver: bridge

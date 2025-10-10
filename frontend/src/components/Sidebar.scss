@@ -1,0 +1,123 @@
+@use "../styles/variables" as *;
+@use "../styles/mixins" as *;
+
+.sidebar {
+  background: linear-gradient(180deg, $color-brand-700, $color-brand-800);
+  color: #e5e7eb;
+  padding: $space-6 $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  min-height: 100vh;
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: .625rem; // 10px
+    margin-bottom: $space-4;
+
+    .logo {
+      display: inline-grid;
+      place-items: center;
+      width: 2.25rem; // 36px
+      height: 2.25rem;
+      border-radius: .625rem; // 10px
+      background: $color-brand-500;
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 .5rem 1.25rem rgba(0,0,0,.25);
+    }
+
+    .title {
+      font-weight: 700;
+      letter-spacing: .2px;
+      color: #fff;
+    }
+  }
+
+  .menu {
+    display: grid;
+    gap: .375rem;
+
+    .menu-item {
+      text-align: left;
+      background: transparent;
+      color: #d1fae5; // verde muy claro legible en fondo
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: .5rem;
+      padding: .6rem .75rem;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease, border-color .2s ease;
+
+      &:hover {
+        background: rgba(255,255,255,.08);
+        color: #ffffff;
+        border-color: rgba(255,255,255,.15);
+      }
+      &.active {
+        background: rgba(255,255,255,.12);
+        color: #ffffff;
+        border-color: rgba(255,255,255,.2);
+      }
+    }
+  }
+
+  .spacer { flex: 1; }
+
+  .foot {
+    font-size: .75rem;
+    color: rgba(255,255,255,.7);
+    text-align: left;
+  }
+}
+
+/* Cuando el layout colapsa, deja la barra arriba */
+@media (max-width: $bp-sm) {
+  .sidebar {
+    min-height: auto;
+    border-bottom: 1px solid rgba(255,255,255,.15);
+  }
+}
+
+// en Sidebar.scss
+.menu .menu-item.danger {
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, .25);
+}
+.menu .menu-item.danger:hover {
+  background: rgba(239, 68, 68, .08);
+  color: #b91c1c;
+  border-color: #ef4444;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  transition: all 0.2s ease;
+
+  span {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}

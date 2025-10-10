@@ -1,0 +1,88 @@
+@use "./variables" as *;
+
+/* =========================================
+   🧱 MIXINS — utilitarios de estilo
+   ========================================= */
+
+/* ---- Tarjetas (cards) ---- */
+@mixin card($padding: $space-8) {
+  background: $color-surface;
+  border-radius: $radius-card;
+  border: 1px solid $color-border;
+  box-shadow: $shadow-md;
+  padding: $padding;
+}
+
+/* ---- Botón primario ---- */
+@mixin btn-primary($py: 0.8rem, $px: 1.4rem) {
+  background: linear-gradient(90deg, $color-brand-600, $color-brand-700);
+  color: #fff;
+  border: none;
+  border-radius: $radius-input;
+  font-weight: $font-weight-bold;
+  padding: $py $px;
+  cursor: pointer;
+  box-shadow: 0 0.75rem 1.375rem rgba($color-brand-600, 0.25);
+  transition: transform 0.05s ease, filter 0.15s ease;
+
+  &:active {
+    transform: translateY(0.0625rem);
+  }
+
+  &:hover {
+    filter: brightness(1.05);
+  }
+}
+
+/* ---- Botón secundario ---- */
+@mixin btn-secondary($py: 0.8rem, $px: 1.4rem) {
+  background: #fff;
+  color: $color-brand-700;
+  border: 1px solid $color-brand-300;
+  border-radius: $radius-input;
+  font-weight: 600;
+  padding: $py $px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: $color-brand-50;
+    border-color: $color-brand-400;
+  }
+}
+
+/* ---- Input base ---- */
+@mixin input-base {
+  height: 2.75rem; // 44px
+  border: 1px solid $color-border;
+  border-radius: $radius-input;
+  padding: 0 0.75rem;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus {
+    border-color: $color-brand-500;
+    box-shadow: 0 0 0 0.25rem rgba($color-brand-500, 0.12);
+  }
+}
+
+/* ---- Layout de secciones responsivas ---- */
+@mixin section-container {
+  width: min(92vw, 75rem);
+  margin-inline: auto;
+  padding: $space-8;
+}
+
+/* ---- Breakpoints ---- */
+@mixin respond($breakpoint) {
+  @if $breakpoint == sm {
+    @media (max-width: $bp-sm) { @content; }
+  } @else if $breakpoint == md {
+    @media (max-width: $bp-md) { @content; }
+  } @else if $breakpoint == lg {
+    @media (max-width: $bp-lg) { @content; }
+  } @else if $breakpoint == xl {
+    @media (max-width: $bp-xl) { @content; }
+  }
+}
