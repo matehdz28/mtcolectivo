@@ -53,6 +53,54 @@ def parse_time(t: str) -> datetime:
     t = t.replace("a.m.", "AM").replace("p.m.", "PM")
     return datetime.strptime(t.strip(), "%I:%M:%S %p")
 
+def is_cantaritos(destino: str) -> bool:
+    destino = destino.lower()
+    keywords = ["cantaritos", "amatit", "tequila"]
+    return any(k in destino for k in keywords)
+
+
+# TABLAS DE TARIFAS ESPECIALES
+CANTARITOS_PRICES = {
+    "morning": {   # 9am – 4pm
+        6:  {"normal": 2500, "desc": 2250},
+        14: {"normal": 5000, "desc": 4500},
+        20: {"normal": 6000, "desc": 5500},
+    },
+    "afternoon": {  # 1pm – 8pm
+        6:  {"normal": 3000, "desc": 2500},
+        14: {"normal": 5500, "desc": 5000},
+        20: {"normal": 6500, "desc": 6000},
+    }
+}
+
+
+def determine_cantaritos_price(capacidad: int, hora_salida: str) -> float:
+    """
+    Devuelve el precio correcto según hora y capacidad.
+    """
+
+    # Convertir hora “3:22:00 a.m.” → datetime
+    t = parse_time(hora_salida)
+    hour = t.hour
+
+    # Determinar horario
+    if 9 <= hour < 12:
+        period = "morning"
+    elif 13 <= hour < 16:
+        period = "afternoon"
+    else:
+        # Si cae fuera, aplicar morning por default
+        period = "morning"
+
+    price_info = CANTARITOS_PRICES.get(period, {}).get(capacidad)
+
+    if price_info is None:
+        # No hay precio para esta capacidad → 0
+        return 0.0
+    
+    # ¿Dejamos precio con descuento por default?
+    return price_info["desc"]   # <<< usar precio recomendado
+
 
 @public_router.post("/form-submit", include_in_schema=False)
 def form_submit(request: Request, payload: dict, db: Session = Depends(get_db)):
@@ -82,7 +130,11 @@ def form_submit(request: Request, payload: dict, db: Session = Depends(get_db)):
     capacidadu = assign_capacidad(pasajeros)
 
     # --- Precio total según capacidad ---
-    total = PRICE_TABLE.get(capacidadu, 0.0)
+    destino = payload.get("destino", "").lower()
+    if is_cantaritos(destino):
+        total = determine_cantaritos_price(capacidadu, payload.get("hora_salida"))
+    else:
+        total = PRICE_TABLE.get(capacidadu, 0.0)
 
     # --- Crear orden ---
     order = Order(
