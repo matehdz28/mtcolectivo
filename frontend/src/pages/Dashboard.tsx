@@ -5,6 +5,7 @@ import Sidebar from "../components/Sidebar";
 import Modal, { type ModalStatus } from "../components/Modal";
 import PdfPreview from "../components/PdfPreview";
 import { uploadExcel, ApiError } from "../services/api";
+import OrderEditor from "@/components/OrderEditor";
 import {
   deleteOrder,
   fetchOrders,
@@ -14,7 +15,7 @@ import {
 import "./Dashboard.scss";
 import { DownloadIcon, EyeIcon, TrashIcon } from "../components/Icons";
 import { useAuth } from "../contexts/AuthContext";
-import OrderEditor from "@/components/OrderEditor";
+
 
 type ApiState = "idle" | "loading" | "done" | "error";
 
@@ -396,13 +397,6 @@ export default function Dashboard() {
         </section>
       </main>
 
-      <OrderEditor
-        open={editorOpen}
-        order={editingOrder}
-        onClose={() => setEditorOpen(false)}
-        onSaved={loadingOrders}
-      />
-
       <Modal
         open={modalOpen}
         status={modalStatus}
@@ -460,6 +454,12 @@ export default function Dashboard() {
           setPreviewUrl(undefined);
           setPreviewOpen(false);
         }}
+      />
+      <OrderEditor
+        open={editorOpen}
+        order={editingOrder}
+        onClose={() => setEditorOpen(false)}
+        onSaved={loadingOrders}
       />
     </div>
   );
