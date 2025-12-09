@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from app.database import Base, engine
 from app.routers import pdf, orders, auth
+from app.routers.orders import public_router, private_router
 
 app = FastAPI(
     title="MT Colectivo API",
@@ -55,7 +56,10 @@ app.include_router(auth.router)
 app.include_router(pdf.router)
 
 # 🟢 PUBLICO: Google Forms puede entrar aquí
-app.include_router(orders.public_router)
+app.include_router(public_router)
+
+# Después rutas privadas (requieren JWT)
+app.include_router(private_router)
 
 # 🔐 PRIVADO: Panel administrativo protegido con JWT
 app.include_router(orders.private_router)
