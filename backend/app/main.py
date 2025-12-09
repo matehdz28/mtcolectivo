@@ -4,11 +4,12 @@ from sqlalchemy import text
 from app.database import Base, engine
 from app.routers import pdf, orders, auth
 
-app = FastAPI(title="MT Colectivo API",
-    docs_url=None, 
+app = FastAPI(
+    title="MT Colectivo API",
+    docs_url="/secret-docs",
     redoc_url=None,
-    openapi_url=None,
-    )
+    openapi_url="/secret-openapi.json"
+)
 
 @app.on_event("startup")
 def on_startup():

@@ -1,4 +1,4 @@
-cd mt-colectivo
+cd mt
 docker-compose up --build
 
 
