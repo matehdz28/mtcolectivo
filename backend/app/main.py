@@ -12,13 +12,36 @@ app = FastAPI(
 )
 
 @app.on_event("startup")
+@app.on_event("startup")
 def on_startup():
     Base.metadata.create_all(bind=engine)
+
+    # mini-migración para columnas que pudieron faltar
     with engine.connect() as conn:
-        cols = [row[1] for row in conn.execute(text("PRAGMA table_info('orders')")).fetchall()]
-        if "subtotal" not in cols:
-            conn.execute(text("ALTER TABLE orders ADD COLUMN subtotal REAL"))
-            conn.commit()
+        rows = conn.execute(text("PRAGMA table_info('orders')")).fetchall()
+        cols = [row[1] for row in rows]
+
+        # nombre_columna: tipo_sqlite
+        needed_cols = {
+            "dir_salida": "TEXT",
+            "dir_destino": "TEXT",
+            "hor_ida": "TEXT",
+            "hor_regreso": "TEXT",
+            "duracion": "TEXT",
+            "capacidadu": "TEXT",
+            "subtotal": "REAL",
+            "descuento": "REAL",
+            "total": "REAL",
+            "abonado": "REAL",
+            "fecha_abono": "TEXT",
+            "liquidar": "REAL",
+        }
+
+        for col_name, col_type in needed_cols.items():
+            if col_name not in cols:
+                conn.execute(text(f"ALTER TABLE orders ADD COLUMN {col_name} {col_type}"))
+
+        conn.commit()
 
 # =======================
 # ROUTERS
