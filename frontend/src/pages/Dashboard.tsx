@@ -5,7 +5,7 @@ import Sidebar from "../components/Sidebar";
 import Modal, { type ModalStatus } from "../components/Modal";
 import PdfPreview from "../components/PdfPreview";
 import { uploadExcel, ApiError } from "../services/api";
-import OrderEditor from "@/components/OrderEditor";
+import OrderEditor from "../components/OrderEditor";
 import {
   deleteOrder,
   fetchOrders,
