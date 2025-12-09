@@ -55,7 +55,7 @@ def parse_time(t: str) -> datetime:
 
 def is_cantaritos(destino: str) -> bool:
     destino = destino.lower()
-    keywords = ["cantaritos", "amatit", "tequila"]
+    keywords = ["cantaritos", "amatitlan", "tequila"]
     return any(k in destino for k in keywords)
 
 
