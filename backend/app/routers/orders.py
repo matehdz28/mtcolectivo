@@ -272,3 +272,52 @@ def delete_order(order_id: int, db: Session = Depends(get_db)):
     db.delete(order)
     db.commit()
     return Response(status_code=204)
+
+@private_router.post("/{order_id}/toggle-discount")
+def toggle_discount(order_id: int, db: Session = Depends(get_db)):
+    order = db.get(Order, order_id)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    # Si descuento = 0 → aplicar descuento recomendado (10%)
+    # Si descuento > 0 → quitar descuento
+    if order.descuento == 0:
+        order.descuento = order.subtotal * 0.10  # 10% descuento
+    else:
+        order.descuento = 0
+
+    order.total = order.subtotal - order.descuento
+    order.liquidar = order.total - order.abonado
+
+    db.commit()
+    db.refresh(order)
+    return serialize_order(order)
+
+@private_router.post("/{order_id}/add-payment")
+def add_payment(order_id: int, amount: float, db: Session = Depends(get_db)):
+    order = db.get(Order, order_id)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    if amount <= 0:
+        raise HTTPException(status_code=400, detail="El abono debe ser mayor a 0")
+
+    order.abonado += amount
+    order.liquidar = order.total - order.abonado
+
+    db.commit()
+    db.refresh(order)
+    return serialize_order(order)
+
+@private_router.post("/{order_id}/reset-payment")
+def reset_payment(order_id: int, db: Session = Depends(get_db)):
+    order = db.get(Order, order_id)
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    order.abonado = 0
+    order.liquidar = order.total
+
+    db.commit()
+    db.refresh(order)
+    return serialize_order(order)
