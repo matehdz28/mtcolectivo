@@ -14,6 +14,7 @@ import {
 import "./Dashboard.scss";
 import { DownloadIcon, EyeIcon, TrashIcon } from "../components/Icons";
 import { useAuth } from "../contexts/AuthContext";
+import OrderEditor from "@/components/OrderEditor";
 
 type ApiState = "idle" | "loading" | "done" | "error";
 
@@ -29,6 +30,21 @@ const fmtMoney = (n: number | null) =>
 export default function Dashboard() {
   const { isAuth } = useAuth();
   const fileRef = useRef<HTMLInputElement | null>(null);
+
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [editingOrder, setEditingOrder] = useState(null);
+
+  // Abre el modal de edición
+  function openEditor(order: any) {
+    setEditingOrder(order);
+    setEditorOpen(true);
+  }
+
+  // Cerrar editor
+  function closeEditor() {
+    setEditorOpen(false);
+    setEditingOrder(null);
+  }
 
   // 👇 NUEVO: key para forzar remount del input tras cada uso
   const [inputKey, setInputKey] = useState(0);
@@ -148,6 +164,7 @@ export default function Dashboard() {
     setModalTitle("Abriendo vista previa…");
     setModalMsg("Preparando el documento.");
     setModalOpen(true);
+
     try {
       const pdf = await pdfFromData(order, ac.signal);
       const url = URL.createObjectURL(pdf);
@@ -297,67 +314,94 @@ export default function Dashboard() {
         </section>
         {/* ===== ÓRDENES: Tabla Pro ===== */}
         <section className="orders-pro">
-  <h3>Órdenes recientes</h3>
+          <h3>Órdenes recientes</h3>
 
-  {/* Encabezado fijo */}
-  <div className="orders-pro__head">
-    <div className="col col--cliente">Cliente</div>
-    <div className="col col--total">Total</div>
-    <div className="col col--fecha">Fecha</div>
-    <div className="col col--hora">Hora</div>
-    <div className="col col--acciones">Acciones</div>
-  </div>
+          {/* Encabezado fijo */}
+          <div className="orders-pro__head">
+            <div className="col col--cliente">Cliente</div>
+            <div className="col col--total">Total</div>
+            <div className="col col--fecha">Fecha</div>
+            <div className="col col--hora">Hora</div>
+            <div className="col col--acciones">Acciones</div>
+          </div>
 
-  {/* Área scrolleable */}
-  <div className="orders-pro__body">
-    {loadingOrders && (
-      <div className="orders-pro__empty">Cargando…</div>
-    )}
-    {!loadingOrders && orders.length === 0 && (
-      <div className="orders-pro__empty">Aún no hay órdenes.</div>
-    )}
+          {/* Área scrolleable */}
+          <div className="orders-pro__body">
+            {loadingOrders && (
+              <div className="orders-pro__empty">Cargando…</div>
+            )}
+            {!loadingOrders && orders.length === 0 && (
+              <div className="orders-pro__empty">Aún no hay órdenes.</div>
+            )}
 
-    {orders.map((o, idx) => (
-      <div
-        key={o.id}
-        className={`orders-pro__row ${idx % 2 ? "is-alt" : ""}`}
-      >
-        <div className="cell cell--cliente" onClick={() => openPreview(o)}>
-          <div className="name">{o.nombre || "Sin nombre"}</div>
-          <div className="sub">#{o.id}</div>
-        </div>
+            {orders.map((o, idx) => (
+              <div
+                key={o.id}
+                className={`orders-pro__row ${idx % 2 ? "is-alt" : ""}`}
+              >
+                <div
+                  className="cell cell--cliente"
+                  onClick={() => openPreview(o)}
+                >
+                  <div className="name">{o.nombre || "Sin nombre"}</div>
+                  <div className="sub">#{o.id}</div>
+                </div>
 
-        <div className="cell cell--total">
-          <span className="money">{fmtMoney(o.total)}</span>
-        </div>
+                <div className="cell cell--total">
+                  <span className="money">{fmtMoney(o.total)}</span>
+                </div>
 
-        <div className="cell cell--fecha">
-          {fmtDate(o.created_at)}
-        </div>
+                <div className="cell cell--fecha">{fmtDate(o.created_at)}</div>
 
-        <div className="cell cell--hora">
-          {new Date(o.created_at).toLocaleTimeString("es-MX", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </div>
+                <div className="cell cell--hora">
+                  {new Date(o.created_at).toLocaleTimeString("es-MX", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </div>
 
-        <div className="cell cell--acciones">
-          <button className="icon-chip" onClick={() => openPreview(o)} aria-label="Vista previa">
-            <EyeIcon size="1.1rem" />
-          </button>
-          <button className="icon-chip" onClick={() => downloadFromOrder(o)} aria-label="Descargar PDF">
-            <DownloadIcon size="1.1rem" />
-          </button>
-          <button className="icon-chip danger" onClick={() => removeOrder(o)} aria-label="Eliminar orden">
-            <TrashIcon size="1.1rem" />
-          </button>
-        </div>
-      </div>
-    ))}
-  </div>
-</section>
+                <div className="cell cell--acciones">
+                  <button
+                    className="icon-chip"
+                    onClick={() => openPreview(o)}
+                    aria-label="Vista previa"
+                  >
+                    <EyeIcon size="1.1rem" />
+                  </button>
+                  <button
+                    className="icon-chip"
+                    onClick={() => downloadFromOrder(o)}
+                    aria-label="Descargar PDF"
+                  >
+                    <DownloadIcon size="1.1rem" />
+                  </button>
+                  <button
+                    className="icon-chip danger"
+                    onClick={() => removeOrder(o)}
+                    aria-label="Eliminar orden"
+                  >
+                    <TrashIcon size="1.1rem" />
+                  </button>
+                  <button
+                    className="icon-chip"
+                    onClick={() => openEditor(o)}
+                    aria-label="Editar orden"
+                  >
+                    <p>edit</p>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
+
+      <OrderEditor
+        open={editorOpen}
+        order={editingOrder}
+        onClose={() => setEditorOpen(false)}
+        onSaved={loadingOrders}
+      />
 
       <Modal
         open={modalOpen}
@@ -420,4 +464,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
