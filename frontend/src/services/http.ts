@@ -1,5 +1,5 @@
 // src/services/http.ts
-export const API_BASE = import.meta.env.VITE_API_URL ?? "https://vigilant-elegance-production-8c9c.up.railway.app";
+export const API_BASE = import.meta.env.VITE_API_URL ?? "https://mtcolectivo-production.up.railway.app";
 
 function getToken(): string | null {
   return localStorage.getItem("mt_token");
